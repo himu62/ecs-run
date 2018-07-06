@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: golang:alpine
+    working_directory: /go/src/github.com/himu62/ecs-run
+    steps:
+      - checkout
+      - run: go get -v github.com/golang/dep/cmd/dep
+      - run: go get -v golang.org/x/lint/golint
+      - run: dep ensure -v
+      - run: go vet ./...
+      - run: golint ./...
+      - run: go test -v -count=1 ./...
+      - run: go build ecs-run.go
